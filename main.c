@@ -8,64 +8,41 @@
 
 #include "./include/Renderer/Mesh.h" 
 #include "./include/Utils/MeshReader.h"
+#include "./include/Renderer/Matrix.h"
+
+/*
+ *
+ * TODO: Finish programming the Camera matrix left off on transforming the old pipeline from
+ * transform -> perspective -> draw
+ *  INTO:
+ * transform -> camera -> perspective -> draw
+ *
+ */
+
+
 int main() {
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         printf("SDL Init Error: %s\n", SDL_GetError());
         return 1;
     }
 
-    Vec3 camera = Vec3(0,0,0);
+    Vec3 cameraPos = Vec3(0,0,0);
+    Vec3 lookDir = Vec3(0,0,1);
+    Vec3 up = Vec3(0, 1, 0);
+    Vec3 target = Vec3_add(cameraPos, lookDir);
+
+    Matrix4x4 matCamera = Matrix4x4_pointAt(cameraPos, target, up);
+
+    Matrix4x4 matView = Matrix4x4_inverse(matCamera);
 
     int width = 800, height = 600;
     SDL_Window* win = SDL_CreateWindow("Cube", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
     SDL_Renderer* renderer = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
     Mesh mesh = Mesh_objToMesh("./assets/circle4.obj");
-    Vertex vertices[8] = {
-        Vertex(Vec3_init( 1,  1,  1), Color(255, 0, 0, 255)),  // Red (positive x, y, z)
-        Vertex(Vec3_init(-1,  1,  1), Color(0, 255, 0, 255)),  // Green (negative x, positive y, z)
-        Vertex(Vec3_init(-1, -1,  1), Color(0, 0, 255, 255)),  // Blue (negative x, negative y, z)
-        Vertex(Vec3_init( 1, -1,  1), Color(255, 255, 0, 255)), // Yellow (positive x, negative y, z)
-        Vertex(Vec3_init( 1,  1, -1), Color(255, 165, 0, 255)), // Orange (positive x, y, negative z)
-        Vertex(Vec3_init(-1,  1, -1), Color(128, 0, 128, 255)), // Purple (negative x, positive y, negative z)
-        Vertex(Vec3_init(-1, -1, -1), Color(0, 255, 255, 255)), // Cyan (negative x, negative y, negative z)
-        Vertex(Vec3_init( 1, -1, -1), Color(255, 0, 255, 255))  // Magenta (positive x, negative y, negative z)
-    };
-    Tri3D tris[12] = {
-        // Front face (+Z)
-        Tri3D(vertices[0], vertices[1], vertices[2]),
-        Tri3D(vertices[0], vertices[2], vertices[3]),
-
-        // Back face (-Z)
-        Tri3D(vertices[4], vertices[6], vertices[5]),
-        Tri3D(vertices[4], vertices[7], vertices[6]),
-
-        // Left face (-X)
-        Tri3D(vertices[1], vertices[5], vertices[6]),
-        Tri3D(vertices[1], vertices[6], vertices[2]),
-
-        // Right face (+X)
-        Tri3D(vertices[0], vertices[3], vertices[7]),
-        Tri3D(vertices[0], vertices[7], vertices[4]),
-
-        // Top face (+Y)
-        Tri3D(vertices[0], vertices[4], vertices[5]),
-        Tri3D(vertices[0], vertices[5], vertices[1]),
-
-        // Bottom face (-Y)
-        Tri3D(vertices[3], vertices[2], vertices[6]),
-        Tri3D(vertices[3], vertices[6], vertices[7])
-    };
-    /*
-    Mesh mesh = {
-        .tris = tris,
-        .count = 12,
-        .centroid = Vec3(0, 0, 0)
-    };
-*/
-    // Move cube back along z-axis
+    
     Vec3 move_back = {0, 0, 5};
     Vec3 rotate_vec = {20, 15, 20};
-    Mesh_translate(&mesh, move_back);
+    Mesh_translate(&mesh, move_back); 
 
     float fov = M_PI / 2.0f;
     float aspect = (float)width / (float)height;
@@ -111,7 +88,7 @@ int main() {
                 }
             }
         }
-        Mesh_draw(&mesh, renderer, camera, fov, aspect, near, far, width, height);
+        Mesh_draw(&mesh, renderer, cameraPos, fov, aspect, near, far, width, height);
 
         Mesh_rotation(&mesh, Vec3(.01, 0.005, .01));
 

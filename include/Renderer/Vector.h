@@ -25,6 +25,12 @@ typedef struct {
 #define Vec4(x, y, z, w) (Vec4) {x, y, z, w}
 #define Vec3_mag(v) sqrtf(v.x*v.x + v.y*v.y + v.z*v.z)
 
+
+// "normalized vector" accordingf to chatgpt :(
+
+#define Vec3_add(v1, v2) ((Vec3){v1.x+v2.x, v1.y+v2.y, v1.z + v2.z})
+#define Vec3_sub(v1, v2) ((Vec3){v1.x-v2.x, v1.y-v2.y, v1.z - v2.z})
+
 Vec3 Vec3_unitVector(Vec3 v) {
     float mag = Vec3_mag(v);
     return Vec3(v.x/mag, v.y/mag, v.z/mag); 
@@ -50,7 +56,7 @@ Vec2 to_screen_space(Vec3 vertex, int screen_width, int screen_height) {
 }
 
 // Helper function to compute the normal of a triangle in 3D
-Vec3 crossProduct(Vec3 a, Vec3 b) {
+Vec3 Vec3_crossProduct(Vec3 a, Vec3 b) {
     Vec3 result;
     result.x = a.y * b.z - a.z * b.y;
     result.y = a.z * b.x - a.x * b.z;
@@ -62,5 +68,7 @@ Vec3 crossProduct(Vec3 a, Vec3 b) {
 float Vec3_dotProduct(Vec3 a, Vec3 b) {
     return a.x * b.x + a.y * b.y + a.z * b.z;
 }
+
+
 
 #endif

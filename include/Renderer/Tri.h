@@ -1,4 +1,5 @@
-
+#ifndef TRI_H
+#define TRI_H
 typedef struct {
     Vec3 pos;
     Color color;    
@@ -253,7 +254,7 @@ int Tri3D_isBackFacing(Vec3 A, Vec3 B, Vec3 C, Vec3 cameraDirection) {
     Vec3 edge2 = {C.x - A.x, C.y - A.y, C.z - A.z};
 
     // Compute the normal of the triangle using the cross product
-    Vec3 normal = crossProduct(edge1, edge2);
+    Vec3 normal = Vec3_crossProduct(edge1, edge2);
 
     // Dot product between the normal and camera direction
     float dot = Vec3_dotProduct(normal, cameraDirection);
@@ -263,4 +264,4 @@ int Tri3D_isBackFacing(Vec3 A, Vec3 B, Vec3 C, Vec3 cameraDirection) {
     return dot > 0;
 }
 
-
+#endif

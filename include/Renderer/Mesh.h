@@ -4,7 +4,20 @@
 #include "./Color.h"
 #include "./Tri.h"
 
-void perspective_projection(Vec3 *vertex, float fov, float aspect_ratio, float near_plane, float far_plane) {
+void Matrix_viewMatrix(Vec3 *vertex, float fov, float aspect_ratio, float near_plane, float far_plane) {
+    float f = 1.0f / tanf(fov / 2.0f);
+
+    // Avoid division by zero
+    float z = (vertex->z == 0.0f) ? 0.001f : vertex->z;
+
+    vertex->x = (vertex->x * f / aspect_ratio) / z;
+    vertex->y = (vertex->y * f) / z;
+
+    // You can still keep the depth value if needed
+}
+
+
+void Matrix_perspectiveProjection(Vec3 *vertex, float fov, float aspect_ratio, float near_plane, float far_plane) {
     float f = 1.0f / tanf(fov / 2.0f);
 
     // Avoid division by zero
@@ -106,8 +119,10 @@ void Mesh_draw(Mesh *mesh, SDL_Renderer *renderer, Vec3 camera, float fov, float
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 
         //Mesh_draw(&mesh, renderer, camera, fov, aspect, near, far, width, height);
-        
-        // Draw all triangles in the mesh
+       
+         
+
+        // Draw all triangles in the mesh 
         for (size_t i = 0; i < mesh->count; i++) {
             Tri3D tri = mesh->tris[i];
 
@@ -146,9 +161,12 @@ void Mesh_draw(Mesh *mesh, SDL_Renderer *renderer, Vec3 camera, float fov, float
                 // Y=0.2126⋅R+0.7152⋅G+0.0722⋅B
                 float dp = Vec3_dotProduct(normal, Vec3_unitVector(light));
                 // Project
-                perspective_projection(&a, fov, aspect, near, far);
-                perspective_projection(&b, fov, aspect, near, far);
-                perspective_projection(&c, fov, aspect, near, far);
+                
+                
+
+                Matrix_perspectiveProjection(&a, fov, aspect, near, far);
+                Matrix_perspectiveProjection(&b, fov, aspect, near, far);
+                Matrix_perspectiveProjection(&c, fov, aspect, near, far);
                 
                 Vertex v1 = Vertex(a, Color_BLUE);
                 Vertex v2 = Vertex(b, Color_BLUE);

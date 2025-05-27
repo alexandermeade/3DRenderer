@@ -1,5 +1,5 @@
-
-
+#ifndef COLOR_H
+#define COLOR_H
 typedef struct {
     Uint8 r,g,b,a;
 }Color;
@@ -20,7 +20,6 @@ Color Color_calcLuminance(Color color, float lum) {
     float r_norm = color.r / 255.0f;
     float g_norm = color.g / 255.0f;
     float b_norm = color.b / 255.0f;
-    
     // Calculate current luminance using normalized values
     float currLum = 0.2126f * r_norm + 0.7152f * g_norm + 0.0722f * b_norm;
     
@@ -38,4 +37,4 @@ Color Color_calcLuminance(Color color, float lum) {
     
     return (Color){r, g, b, 255};
 }
-
+#endif
