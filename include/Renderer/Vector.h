@@ -6,10 +6,11 @@ typedef struct {
     float y;
 }Vec2;
 
-typedef struct {
+typedef struct Vec3_t{
     float x;
     float y;
     float z;
+    float w;
 }Vec3;
 
 typedef struct {
@@ -30,6 +31,7 @@ typedef struct {
 
 #define Vec3_add(v1, v2) ((Vec3){v1.x+v2.x, v1.y+v2.y, v1.z + v2.z})
 #define Vec3_sub(v1, v2) ((Vec3){v1.x-v2.x, v1.y-v2.y, v1.z - v2.z})
+#define Vec3_mult(v, s) ((Vec3){v.x * s, v.y * s, v.z * s})
 
 Vec3 Vec3_unitVector(Vec3 v) {
     float mag = Vec3_mag(v);
@@ -42,6 +44,7 @@ Vec3 Vec3_init(float x, float y, float z) {
 
 void Vec2_scale(Vec2 *v, float c) {v->x *= c; v->y*=c;}
 void Vec3_scale(Vec3 *v, float c) {v->x *= c; v->y*=c; v->z*=c;}
+Vec3 Vec3_scaleBack(Vec3 v, float c) {return Vec3(v.x * c, v.y*c, v.z*c);}
 
 
 // Convert 3D vertex to 2D screen coordinates

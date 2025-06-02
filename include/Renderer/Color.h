@@ -22,7 +22,7 @@ Color Color_calcLuminance(Color color, float lum) {
     float b_norm = color.b / 255.0f;
     // Calculate current luminance using normalized values
     float currLum = 0.2126f * r_norm + 0.7152f * g_norm + 0.0722f * b_norm;
-    
+
     // Prevent division by zero
     if (currLum < 0.001f) {
         currLum = 0.001f;

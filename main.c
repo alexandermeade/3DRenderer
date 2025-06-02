@@ -31,15 +31,14 @@ int main() {
     Vec3 up = Vec3(0, 1, 0);
     Vec3 target = Vec3_add(cameraPos, lookDir);
 
-    Matrix4x4 matCamera = Matrix4x4_pointAt(cameraPos, target, up);
-
-    Matrix4x4 matView = Matrix4x4_inverse(matCamera);
 
     int width = 800, height = 600;
     SDL_Window* win = SDL_CreateWindow("Cube", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
     SDL_Renderer* renderer = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
     Mesh mesh = Mesh_objToMesh("./assets/circle4.obj");
     
+    Mesh_scale(&mesh, Vec3(2,2,2));
+
     Vec3 move_back = {0, 0, 5};
     Vec3 rotate_vec = {20, 15, 20};
     Mesh_translate(&mesh, move_back); 
@@ -76,6 +75,19 @@ int main() {
                      case SDLK_a:
                          Mesh_rotation(&mesh, Vec3(0, 0, .5));
                          break;
+                     case SDLK_i:
+                         cameraPos.y += .05;
+                         break;
+                     case SDLK_k:
+                         cameraPos.y -= .05;
+                         break;
+                     case SDLK_j:
+                         cameraPos.x += .05;
+                         break;
+                     case SDLK_l:
+                         cameraPos.x -= .05;
+                         break;
+
                      case SDLK_d:
                          Mesh_rotation(&mesh, rotate_vec);
                          break;
@@ -88,7 +100,10 @@ int main() {
                 }
             }
         }
-        Mesh_draw(&mesh, renderer, cameraPos, fov, aspect, near, far, width, height);
+
+        Matrix4x4 matCamera = Matrix4x4_pointAt(cameraPos, target, up);
+        Matrix4x4 matView = Matrix4x4_inverse(matCamera);
+        Mesh_draw(&mesh, renderer, cameraPos, matCamera, fov, aspect, near, far, width, height);
 
         Mesh_rotation(&mesh, Vec3(.01, 0.005, .01));
 

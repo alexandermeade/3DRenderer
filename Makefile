@@ -1,3 +1,5 @@
+
+
 CC = gcc
 CFLAGS = -std=c11 -Wall -Iinclude
 LIBS = -lSDL2 -ldl -lGL -lm
@@ -18,4 +20,6 @@ run:
 
 cleanrun:
 	rm -f $(BIN) && $(BIN) 
+
+
 
